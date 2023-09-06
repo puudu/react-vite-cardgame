@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Queen Aurora",
+        "type": "fire",
+        "imgPath": "../assets/images/cards/cardHeartsQ.png"
+    },
+    {
+        "name": "Queen Blanca",
+        "type": "water",
+        "imgPath": "../assets/images/cards/cardDiamondsQ.png"
+    },
+    {
+        "name": "Queen Miel",
+        "type": "leaf",
+        "imgPath": "../assets/images/cards/cardClubsQ.png"
+    },
+    {
+        "name": "Queen Unknown",
+        "type": "thunder",
+        "imgPath": "../assets/images/cards/cardSpadesQ.png"
+    },
+    {
+        "name": "Joker",
+        "type": "joker",
+        "imgPath": "../assets/images/cards/cardJoker.png"
+    }
+]
