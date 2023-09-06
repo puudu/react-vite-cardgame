@@ -12,7 +12,7 @@ const CardInField = (props) => {
     };
 
     return (
-        <div>
+        <div className="border-2 border-black hover:border-2 hover:border-white">
             <img width="80rem" src={props.card.imgPath} />
             <p>{renderHearts()}</p>
         </div>
