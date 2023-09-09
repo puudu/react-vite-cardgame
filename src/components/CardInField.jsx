@@ -1,7 +1,9 @@
 import { useState } from "react";
+import cardBack from "../assets/images/cards/cardBack_pink.png";
 
-const CardInField = (props) => {
-    const { health, setHealth } = useState(props.initialHealth);
+const CardInField = ({ card, initialHealth, onClick, selected }) => {
+    const { health, setHealth } = useState(initialHealth);
+    const { isActive, setIsActive } = useState(card.isActive);
 
     const renderHearts = () => {
         const hearts = [];
@@ -12,8 +14,13 @@ const CardInField = (props) => {
     };
 
     return (
-        <div className="border-2 border-black hover:border-2 hover:border-white">
-            <img width="80rem" src={props.card.imgPath} />
+        <div
+            className={`border-2 border-black hover:border-2 hover:border-white ${
+                selected ? "border-2 border-pink-500" : ""
+            }`}
+            onClick={onClick}
+        >
+            <img width="80rem" src={!isActive ? card.imgPath : cardBack} />
             <p>{renderHearts()}</p>
         </div>
     );
