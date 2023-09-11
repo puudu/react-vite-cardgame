@@ -1,13 +1,9 @@
-import { useState } from "react";
 import cardBack from "../assets/images/cards/cardBack_pink.png";
 
-const CardInField = ({ card, initialHealth, onClick, selected }) => {
-    const { health, setHealth } = useState(initialHealth);
-    const { isActive, setIsActive } = useState(card.isActive);
-
+const CardInField = ({ card, onClick, selected }) => {
     const renderHearts = () => {
         const hearts = [];
-        for (let i = 0; i < health; i++) {
+        for (let i = 0; i < card.health; i++) {
             hearts.push(<span key={i}>♥</span>);
         }
         return hearts;
@@ -20,8 +16,8 @@ const CardInField = ({ card, initialHealth, onClick, selected }) => {
             }`}
             onClick={onClick}
         >
-            <img width="80rem" src={!isActive ? card.imgPath : cardBack} />
-            <p>{renderHearts()}</p>
+            <img width="80rem" src={card.isActive ? card.imgPath : cardBack} />
+            <p className="text-center">{renderHearts()}</p>
         </div>
     );
 };

@@ -5,6 +5,8 @@ import GetPlayerCards from "../data/GetPlayerCards";
 import ButtonArrow from "../components/ButtonArrow";
 
 const Game = () => {
+    const [playerInput, setPlayerInput] = useState(true);
+
     const randomCards = () => {
         const cards = [...currentEnemyCards];
         console.log(cards);
@@ -28,6 +30,10 @@ const Game = () => {
     };
 
     const moveRowToLeft = (row) => {
+        if (playerInput === false) {
+            return;
+        }
+
         const cards = [...currentEnemyCards];
         const aux = cards[row][0];
         cards[row][0] = cards[row][1];
@@ -38,6 +44,10 @@ const Game = () => {
     };
 
     const moveRowToRight = (row) => {
+        if (playerInput === false) {
+            return;
+        }
+
         const cards = [...currentEnemyCards];
         const aux = cards[row][2];
         cards[row][2] = cards[row][1];
@@ -48,6 +58,10 @@ const Game = () => {
     };
 
     const handleCardClick = (index) => {
+        if (playerInput === false) {
+            return;
+        }
+
         if (selectedCardIndex === null) {
             // Si no hay una carta seleccionada, selecciona la carta actual
             setSelectedCardIndex(index);
@@ -63,6 +77,154 @@ const Game = () => {
 
             // Actualiza las cartas de jugador con el nuevo orden
             setCurrentPlayerCards(updatedPlayerCards);
+        }
+    };
+
+    const checkWeakness = (senderType, targetType) => {
+        if (senderType == targetType) {
+            return false;
+        }
+
+        const elements1 = ["electro", "leaf", "fire", "water"];
+        const elements2 = ["water", "electro", "leaf", "fire"];
+
+        const senderIndex = elements1.indexOf(senderType);
+        const targetIndex = elements2.indexOf(targetType);
+
+        if (senderIndex == targetIndex) {
+            return true;
+        }
+        return false;
+    };
+
+    const playerStrike = () => {
+        setPlayerInput(false);
+
+        const columnas = [0, 1, 2];
+
+        // Iterar sobre las columnas y llamar a playerStrikeColumn con un retraso de 1 segundo
+        columnas.forEach((col, index) => {
+            setTimeout(() => {
+                playerStrikeColumn(col);
+            }, index * 1000); // El índice * 1000 representa el retraso en milisegundos (1 segundo)
+        });
+
+        setTimeout(() => {
+            enemyStrike();
+        }, 3000);
+
+        setTimeout(() => {
+            randomCards();
+            setPlayerInput(true);
+        }, 10000);
+    };
+
+    const playerStrikeColumn = (col) => {
+        const playerCard = currentPlayerCards[col];
+        const enemyField = [...currentEnemyCards];
+        let defeatedCount = 0;
+
+        if (playerCard.type == "joker") {
+            enemyField[0][col].isActive = false;
+            enemyField[1][col].isActive = false;
+            enemyField[2][col].isActive = false;
+            playerCard.health--;
+
+            const updatedPlayerCards = [...currentPlayerCards];
+            updatedPlayerCards[col] = playerCard;
+            setCurrentPlayerCards(updatedPlayerCards);
+
+            console.log(
+                "Columna " + (col + 1).toString() + " / Eliminada por el Joker"
+            );
+        } else {
+            for (let i = 0; i < 3; i++) {
+                if (checkWeakness(playerCard.type, enemyField[i][col].type)) {
+                    enemyField[i][col].isActive = false;
+                    defeatedCount++;
+                }
+            }
+
+            console.log(
+                "Columna " +
+                    (col + 1).toString() +
+                    " / Enemigos derrotados: " +
+                    defeatedCount.toString()
+            );
+
+            if (defeatedCount == 3) {
+                elementalExplotion(playerCard.type);
+            }
+        }
+
+        setCurrentEnemyCards(enemyField);
+    };
+
+    const elementalExplotion = (senderType) => {
+        console.log("Explosion elemental de " + senderType);
+
+        const enemyField = [...currentEnemyCards];
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (checkWeakness(senderType, enemyField[j][i].type)) {
+                    enemyField[j][i].isActive = false;
+                }
+            }
+        }
+
+        setCurrentEnemyCards(enemyField);
+    };
+
+    const enemyStrike = () => {
+        const playerField = [...currentPlayerCards];
+        const enemyField = [...currentEnemyCards];
+
+        let index = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (enemyField[j][i].isActive) {
+                    setTimeout(() => {
+                        if (
+                            checkWeakness(
+                                enemyField[j][i].type,
+                                playerField[i].type
+                            )
+                        ) {
+                            console.log(
+                                "El enemigo " +
+                                    enemyField[j][i].name +
+                                    " inflije 1 punto de daño a " +
+                                    playerField[i].name
+                            );
+                            playerField[i].health--;
+                        } else if (
+                            enemyField[j][i].type == playerField[i].type
+                        ) {
+                            console.log(
+                                "El enemigo " +
+                                    enemyField[j][i].name +
+                                    " ataca a " +
+                                    playerField[i].name +
+                                    ", pero no ocurre nada."
+                            );
+                        } else {
+                            console.log(
+                                "El enemigo " +
+                                    enemyField[j][i].name +
+                                    " ataca a " +
+                                    playerField[i].name +
+                                    ", ambos reciben 1 punto de daño."
+                            );
+                            playerField[i].health--;
+                            enemyField[j][i].isActive = false;
+                        }
+                        index++;
+                        setCurrentPlayerCards(playerField);
+                        setCurrentEnemyCards(enemyField);
+                    }, index * 1000);
+                }
+            }
         }
     };
 
@@ -91,7 +253,7 @@ const Game = () => {
     );
 
     const [currentPlayerCards, setCurrentPlayerCards] =
-        useState(initialPlayerCards); // 3 y 4 son cartas
+        useState(initialPlayerCards);
 
     const [selectedCardIndex, setSelectedCardIndex] = useState(null);
 
@@ -179,7 +341,6 @@ const Game = () => {
                     {currentPlayerCards.slice(3, 5).map((card, index) => (
                         <CardInField
                             key={card.id}
-                            initialHealth={3}
                             card={card}
                             onClick={() => handleCardClick(index + 3)}
                             selected={selectedCardIndex === index + 3}
@@ -188,7 +349,13 @@ const Game = () => {
                 </div>
             </div>
             <div className="flex justify-center bg-zinc-900 py-2 text-gray-200">
-                <button className="rounded-full bg-zinc-700 px-4 py-2 font-bold text-white hover:bg-pink-500">
+                <button
+                    onClick={playerInput ? playerStrike : null}
+                    className={`rounded-full bg-zinc-700 px-4 py-2 font-bold text-white ${
+                        playerInput ? "hover:bg-pink-500" : "cursor-not-allowed"
+                    }`}
+                    disabled={!playerInput}
+                >
                     Siguiente
                 </button>
             </div>
