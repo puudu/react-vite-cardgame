@@ -3,13 +3,35 @@ import CardInField from "../components/CardInField";
 import GetEnemyCards from "../data/GetEnemyCards";
 import GetPlayerCards from "../data/GetPlayerCards";
 import ButtonArrow from "../components/ButtonArrow";
+import GameLog from "../pages/GameLog";
+
+import { useGameLog } from "../context/GameLogContext";
 
 const Game = () => {
     const [playerInput, setPlayerInput] = useState(true);
 
+    const [roundCounter, setRoundCounter] = useState(1);
+    const [roundText, setRoundText] = useState("COMENZANDO...");
+    const [topGameLog, setTopGameLog] = useState(
+        "Prepara tu siguiente movimiento."
+    );
+    const [enemiesDefeated, setEnemiesDefeated] = useState(0);
+
+    const { setGameLogs } = useGameLog();
+
+    const setNewLog = (msg) => {
+        if (msg[0] == "=") {
+            setGameLogs([]);
+        }
+        setGameLogs((prevGameLog) => [...prevGameLog, msg]);
+    };
+
+    const restart = () => {
+        window.location.reload();
+    };
+
     const randomCards = () => {
         const cards = [...currentEnemyCards];
-        console.log(cards);
         for (let i = 0; i < 3; i++) {
             cards[i] = cards[i].map((card) => {
                 if (!card.isActive) {
@@ -100,6 +122,8 @@ const Game = () => {
     const playerStrike = () => {
         setPlayerInput(false);
 
+        setNewLog("= RONDA " + roundCounter.toString() + " =");
+
         const columnas = [0, 1, 2];
 
         // Iterar sobre las columnas y llamar a playerStrikeColumn con un retraso de 1 segundo
@@ -114,9 +138,9 @@ const Game = () => {
         }, 3000);
 
         setTimeout(() => {
-            randomCards();
+            nextRound();
             setPlayerInput(true);
-        }, 10000);
+        }, 6000);
     };
 
     const playerStrikeColumn = (col) => {
@@ -134,9 +158,12 @@ const Game = () => {
             updatedPlayerCards[col] = playerCard;
             setCurrentPlayerCards(updatedPlayerCards);
 
-            console.log(
-                "Columna " + (col + 1).toString() + " / Eliminada por el Joker"
-            );
+            const msg =
+                "Columna " + (col + 1).toString() + " / Eliminada por el Joker";
+            console.log(msg);
+            setTopGameLog(msg);
+            setNewLog(msg);
+            defeatedCount = 3;
         } else {
             for (let i = 0; i < 3; i++) {
                 if (checkWeakness(playerCard.type, enemyField[i][col].type)) {
@@ -145,14 +172,16 @@ const Game = () => {
                 }
             }
 
-            console.log(
+            const msg =
                 "Columna " +
-                    (col + 1).toString() +
-                    " / Enemigos derrotados: " +
-                    defeatedCount.toString()
-            );
+                (col + 1).toString() +
+                " / Enemigos derrotados: " +
+                defeatedCount.toString();
+            console.log(msg);
+            setTopGameLog(msg);
+            setNewLog(msg);
 
-            if (defeatedCount == 3) {
+            if (defeatedCount == 3 && playerCard != "joker") {
                 elementalExplotion(playerCard.type);
             }
         }
@@ -161,13 +190,23 @@ const Game = () => {
     };
 
     const elementalExplotion = (senderType) => {
-        console.log("Explosion elemental de " + senderType);
+        const types = ["fire", "water", "leaf", "electro"];
+        const emojis = ["🔥", "💧", "🌿", "⚡"];
+        const emoji = emojis[types.indexOf(senderType)];
+
+        const msg = emoji + " Explosion elemental " + emoji;
+        console.log(msg);
+        setTopGameLog(msg);
+        setNewLog(msg);
 
         const enemyField = [...currentEnemyCards];
 
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                if (checkWeakness(senderType, enemyField[j][i].type)) {
+                if (
+                    checkWeakness(senderType, enemyField[j][i].type) &&
+                    enemyField[j][i].isActive
+                ) {
                     enemyField[j][i].isActive = false;
                 }
             }
@@ -176,9 +215,25 @@ const Game = () => {
         setCurrentEnemyCards(enemyField);
     };
 
+    const checkCardAlive = (card) => {
+        console.log(
+            "Comprobando salud de " +
+                card.name +
+                "... HP: " +
+                card.health.toString()
+        );
+
+        if (card.health <= 0) {
+            return false;
+        }
+        return true;
+    };
+
     const enemyStrike = () => {
         const playerField = [...currentPlayerCards];
         const enemyField = [...currentEnemyCards];
+
+        setTopGameLog("Ataque enemigo.");
 
         let index = 0;
         for (let i = 0; i < 3; i++) {
@@ -191,33 +246,57 @@ const Game = () => {
                                 playerField[i].type
                             )
                         ) {
-                            console.log(
-                                "El enemigo " +
-                                    enemyField[j][i].name +
-                                    " inflije 1 punto de daño a " +
-                                    playerField[i].name
-                            );
+                            const msg =
+                                "💥 El enemigo " +
+                                enemyField[j][i].name +
+                                " inflije 1 punto de daño a " +
+                                playerField[i].name +
+                                ".";
+                            console.log(msg);
+                            setNewLog(msg);
                             playerField[i].health--;
+
+                            if (
+                                !checkCardAlive(playerField[i]) &&
+                                playerField[i].isActive
+                            ) {
+                                playerField[i].isActive = false;
+                                setNewLog(
+                                    "☠ " + playerField[i].name + " ha caido."
+                                );
+                            }
                         } else if (
                             enemyField[j][i].type == playerField[i].type
                         ) {
-                            console.log(
-                                "El enemigo " +
-                                    enemyField[j][i].name +
-                                    " ataca a " +
-                                    playerField[i].name +
-                                    ", pero no ocurre nada."
-                            );
+                            const msg =
+                                "💤 El enemigo " +
+                                enemyField[j][i].name +
+                                " ataca a " +
+                                playerField[i].name +
+                                ", pero no ocurre nada.";
+                            console.log(msg);
+                            setNewLog(msg);
                         } else {
-                            console.log(
-                                "El enemigo " +
-                                    enemyField[j][i].name +
-                                    " ataca a " +
-                                    playerField[i].name +
-                                    ", ambos reciben 1 punto de daño."
-                            );
+                            const msg =
+                                "⚔ El enemigo " +
+                                enemyField[j][i].name +
+                                " ataca a " +
+                                playerField[i].name +
+                                ", ambos reciben 1 punto de daño.";
+                            console.log(msg);
+                            setNewLog(msg);
                             playerField[i].health--;
                             enemyField[j][i].isActive = false;
+
+                            if (
+                                !checkCardAlive(playerField[i]) &&
+                                playerField[i].isActive
+                            ) {
+                                playerField[i].isActive = false;
+                                setNewLog(
+                                    "☠ " + playerField[i].name + " ha caido."
+                                );
+                            }
                         }
                         index++;
                         setCurrentPlayerCards(playerField);
@@ -228,8 +307,80 @@ const Game = () => {
         }
     };
 
-    useEffect(() => {
+    const totalEnemiesDefeated = () => {
+        const enemyField = [...currentEnemyCards];
+        let defeatedCount = 0;
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (!enemyField[i][j].isActive) {
+                    defeatedCount++;
+                }
+            }
+        }
+
+        const total = enemiesDefeated + defeatedCount;
+        setEnemiesDefeated(total);
+        return total;
+    };
+
+    const gameStart = () => {
+        firstRound();
+    };
+
+    const firstRound = () => {
+        console.log("First round");
+        setNewLog("= RONDA 1 =");
+
+        setRoundCounter(1);
         randomCards();
+        setRoundText("RONDA 1 | Enemigos eliminados: 0");
+        setTopGameLog("Prepara tu siguiente turno.");
+    };
+
+    const nextRound = () => {
+        console.log("Next round");
+
+        const enemies = totalEnemiesDefeated();
+        setRoundCounter((prevRoundCounter) => prevRoundCounter + 1);
+        setRoundText(
+            "RONDA " +
+                (roundCounter + 1).toString() +
+                " | Enemigos eliminados: " +
+                enemies.toString()
+        );
+
+        const queens = queensAlive();
+        if (queens < 3) {
+            console.log("GAME OVER");
+            setNewLog(
+                "Solo queda(n) " + queens.toString() + " reina(s) en pie."
+            );
+            setNewLog("GAME OVER");
+            setTopGameLog("GAME OVER");
+            setPlayerInput(false);
+        } else {
+            randomCards();
+            setTopGameLog("Prepara tu siguiente turno.");
+            setNewLog("");
+        }
+    };
+
+    const queensAlive = () => {
+        const playerField = [...currentPlayerCards];
+        let aliveCount = 0;
+
+        playerField.forEach((card) => {
+            if (card.isActive) {
+                aliveCount++;
+            }
+        });
+
+        return aliveCount;
+    };
+
+    useEffect(() => {
+        gameStart();
     }, []);
 
     const [playerCards, setPlayerCards] = useState(GetPlayerCards());
@@ -260,7 +411,8 @@ const Game = () => {
     return (
         <>
             <div className="mx-4 py-2">
-                <h1 className="text-center text-gray-200">SCORE</h1>
+                <h1 className="text text-center text-gray-200">{roundText}</h1>
+                <p className="text-center text-gray-400">{topGameLog}</p>
                 <div className="flex justify-center py-2">
                     <div className="grid grid-flow-row grid-cols-5 gap-x-5 gap-y-2">
                         <ButtonArrow
@@ -348,7 +500,16 @@ const Game = () => {
                     ))}
                 </div>
             </div>
-            <div className="flex justify-center bg-zinc-900 py-2 text-gray-200">
+            <div className="flex justify-center space-x-4 bg-zinc-900 pb-5 pt-2 text-gray-200">
+                <button
+                    onClick={restart}
+                    className={`rounded-full bg-zinc-700 px-4 py-2 font-bold text-white ${
+                        playerInput ? "hover:bg-pink-500" : "cursor-not-allowed"
+                    }`}
+                    disabled={!playerInput}
+                >
+                    Reiniciar
+                </button>
                 <button
                     onClick={playerInput ? playerStrike : null}
                     className={`rounded-full bg-zinc-700 px-4 py-2 font-bold text-white ${
@@ -359,6 +520,10 @@ const Game = () => {
                     Siguiente
                 </button>
             </div>
+            <GameLog />
+            <footer className="bg-zinc-900 p-3 text-center text-sm text-zinc-400">
+                Hecho con ♥ por puduckey
+            </footer>
         </>
     );
 };
