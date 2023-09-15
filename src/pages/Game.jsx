@@ -120,6 +120,12 @@ const Game = () => {
     };
 
     const playerStrike = () => {
+        if (!checkQueensPlay()) {
+            // Comprueba que no estes jugando con cartas desactivadas
+            setTopGameLog("No puedes jugar con tus cartas caidas en combate.");
+            return;
+        }
+
         setPlayerInput(false);
 
         setNewLog("= RONDA " + roundCounter.toString() + " =");
@@ -130,7 +136,7 @@ const Game = () => {
         columnas.forEach((col, index) => {
             setTimeout(() => {
                 playerStrikeColumn(col);
-            }, index * 1000); // El índice * 1000 representa el retraso en milisegundos (1 segundo)
+            }, index * 1000); // El índice * 1000 representa el retraso en milisegundos
         });
 
         setTimeout(() => {
@@ -139,7 +145,6 @@ const Game = () => {
 
         setTimeout(() => {
             nextRound();
-            setPlayerInput(true);
         }, 6000);
     };
 
@@ -363,7 +368,19 @@ const Game = () => {
             randomCards();
             setTopGameLog("Prepara tu siguiente turno.");
             setNewLog("");
+            setPlayerInput(true);
         }
+    };
+
+    const checkQueensPlay = () => {
+        const playerField = [...currentPlayerCards];
+
+        for (let i = 0; i < 3; i++) {
+            if (!playerField[i].isActive) {
+                return false;
+            }
+        }
+        return true;
     };
 
     const queensAlive = () => {
@@ -503,10 +520,7 @@ const Game = () => {
             <div className="flex justify-center space-x-4 bg-zinc-900 pb-5 pt-2 text-gray-200">
                 <button
                     onClick={restart}
-                    className={`rounded-full bg-zinc-700 px-4 py-2 font-bold text-white ${
-                        playerInput ? "hover:bg-pink-500" : "cursor-not-allowed"
-                    }`}
-                    disabled={!playerInput}
+                    className="rounded-full bg-zinc-700 px-4 py-2 font-bold text-white hover:bg-pink-500"
                 >
                     Reiniciar
                 </button>
