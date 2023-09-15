@@ -267,7 +267,7 @@ const Game = () => {
                             ) {
                                 playerField[i].isActive = false;
                                 setNewLog(
-                                    "☠ " + playerField[i].name + " ha caido."
+                                    "💀 " + playerField[i].name + " ha caido."
                                 );
                             }
                         } else if (
@@ -283,7 +283,7 @@ const Game = () => {
                             setNewLog(msg);
                         } else {
                             const msg =
-                                "⚔ El enemigo " +
+                                "👊 El enemigo " +
                                 enemyField[j][i].name +
                                 " ataca a " +
                                 playerField[i].name +
@@ -299,7 +299,7 @@ const Game = () => {
                             ) {
                                 playerField[i].isActive = false;
                                 setNewLog(
-                                    "☠ " + playerField[i].name + " ha caido."
+                                    "💀 " + playerField[i].name + " ha caido."
                                 );
                             }
                         }
