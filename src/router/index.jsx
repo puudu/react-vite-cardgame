@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../layouts/RootLayout";
 
 import Game from "../pages/Game";
-import GameLog from "../pages/GameLog";
+import Rules from "../pages/Rules";
 
 export const router = createBrowserRouter([
     {
@@ -17,8 +17,8 @@ export const router = createBrowserRouter([
                         element: <Game />,
                     },
                     {
-                        path: "/Log",
-                        element: <GameLog />,
+                        path: "/rules",
+                        element: <Rules />,
                     },
                 ],
             },

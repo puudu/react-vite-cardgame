@@ -1,0 +1,28 @@
+.gameRules {
+    h1 {
+        text-align: center;
+        font-size: larger;
+        font-weight: bold;
+    }
+    h2 {
+        margin-top: 20px;
+        font-size: large;
+        font-weight: bold;
+    }
+    ul {
+        margin-left: 20px;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+
+    li:before {
+        content: "•";
+        margin-right: 5px;
+    }
+    p {
+        margin-left: 20px;
+        text-align: justify;
+        margin-bottom: 5px;
+    }
+}

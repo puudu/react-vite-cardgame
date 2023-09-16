@@ -3,6 +3,7 @@ import CardInField from "../components/CardInField";
 import GetEnemyCards from "../data/GetEnemyCards";
 import GetPlayerCards from "../data/GetPlayerCards";
 import ButtonArrow from "../components/ButtonArrow";
+import Footer from "../components/Footer";
 import GameLog from "../pages/GameLog";
 
 import { useGameLog } from "../context/GameLogContext";
@@ -535,9 +536,7 @@ const Game = () => {
                 </button>
             </div>
             <GameLog />
-            <footer className="bg-zinc-900 p-3 text-center text-sm text-zinc-400">
-                Hecho con ♥ por puduckey
-            </footer>
+            <Footer />
         </>
     );
 };

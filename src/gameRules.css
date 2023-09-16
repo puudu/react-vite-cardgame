@@ -1,0 +1,26 @@
+@charset "UTF-8";
+.gameRules h1 {
+  text-align: center;
+  font-size: larger;
+  font-weight: bold;
+}
+.gameRules h2 {
+  margin-top: 20px;
+  font-size: large;
+  font-weight: bold;
+}
+.gameRules ul {
+  margin-left: 20px;
+}
+.gameRules li {
+  margin-bottom: 5px;
+}
+.gameRules li:before {
+  content: "•";
+  margin-right: 5px;
+}
+.gameRules p {
+  margin-left: 20px;
+  text-align: justify;
+  margin-bottom: 5px;
+}/*# sourceMappingURL=gameRules.css.map */
