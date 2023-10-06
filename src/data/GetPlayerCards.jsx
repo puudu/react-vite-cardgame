@@ -1,8 +1,8 @@
-import cardHeartsQ from "../assets/images/cards/cardHeartsQ.png";
-import cardDiamondsQ from "../assets/images/cards/cardDiamondsQ.png";
-import cardCluesQ from "../assets/images/cards/cardClubsQ.png";
-import cardSpadesQ from "../assets/images/cards/cardSpadesQ.png";
-import cardJoker from "../assets/images/cards/cardJoker.png";
+import cardHeartsQ from "../assets/images/cards/cardHeartsQ_.png";
+import cardDiamondsQ from "../assets/images/cards/cardDiamondsQ_.png";
+import cardCluesQ from "../assets/images/cards/cardClubsQ_.png";
+import cardSpadesQ from "../assets/images/cards/cardSpadesQ_.png";
+import cardJoker from "../assets/images/cards/cardJoker_.png";
 
 const GetPlayerCards = () => {
     const cardList = [

@@ -4,7 +4,7 @@ import GetEnemyCards from "../data/GetEnemyCards";
 import GetPlayerCards from "../data/GetPlayerCards";
 import ButtonArrow from "../components/ButtonArrow";
 import Footer from "../components/Footer";
-import GameLog from "../pages/GameLog";
+import GameLog from "../components/GameLog";
 
 import { useGameLog } from "../context/GameLogContext";
 
@@ -401,8 +401,8 @@ const Game = () => {
         gameStart();
     }, []);
 
-    const [playerCards, setPlayerCards] = useState(GetPlayerCards());
-    const [enemyCards, setEnemyCards] = useState(GetEnemyCards());
+    const [playerCards] = useState(GetPlayerCards());
+    const [enemyCards] = useState(GetEnemyCards());
 
     const initialEnemyCardField = [
         [enemyCards[0], enemyCards[1], enemyCards[2]],
@@ -429,8 +429,8 @@ const Game = () => {
     return (
         <>
             <div className="mx-4 py-2">
-                <h1 className="text text-center text-gray-200">{roundText}</h1>
-                <p className="text-center text-gray-400">{topGameLog}</p>
+                <h1 className="text text-center text-zinc-200">{roundText}</h1>
+                <p className="text-center text-zinc-400">{topGameLog}</p>
                 <div className="flex justify-center py-2">
                     <div className="grid grid-flow-row grid-cols-5 gap-x-5 gap-y-2">
                         <ButtonArrow

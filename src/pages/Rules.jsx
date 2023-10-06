@@ -39,7 +39,7 @@ const Rules = () => {
                 </p>
                 <p>
                     Tienes 5 cartas en tu mano: cuatro reinas correspondientes a
-                    cada elemento y un 🃏Joker. Cada una de estas cartas tiene 3
+                    cada elemento y un Joker. Cada una de estas cartas tiene 3
                     puntos de vida.
                 </p>
                 <p>
@@ -90,11 +90,11 @@ const Rules = () => {
 
                 <h2>🃏 Joker</h2>
                 <p>
-                    El 🃏Joker tiene todos los daños elementales, lo que
-                    significa que puede eliminar una columna completa
-                    independientemente de los elementos de los enemigos. Sin
-                    embargo, recibirá un punto de daño al hacerlo, lo que
-                    significa que solo puede usarse un máximo de 3 veces.
+                    El Joker tiene todos los daños elementales, lo que significa
+                    que puede eliminar una columna completa independientemente
+                    de los elementos de los enemigos. Sin embargo, recibirá un
+                    punto de daño al hacerlo, lo que significa que solo puede
+                    usarse un máximo de 3 veces.
                 </p>
 
                 <h2>💀 Fin del juego</h2>

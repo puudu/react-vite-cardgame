@@ -11,8 +11,10 @@ const CardInField = ({ card, onClick, selected }) => {
 
     return (
         <div
-            className={`border-2 border-black hover:border-2 hover:border-white ${
-                selected ? "border-2 border-pink-500" : ""
+            className={`rounded border-2 hover:border-2 hover:border-white ${
+                selected
+                    ? "rounded border-2 border-pink-400 "
+                    : "border-zinc-900 "
             }`}
             onClick={onClick}
         >
