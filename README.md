@@ -1,8 +1,17 @@
-# React + Vite
+# 🃏 Elemental Queens (Web Card Minigame)
+Juego de cartas original desarrollado en React utilizando Vite.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Caracteristicas
+* Tablero Interactivo: El juego cuenta con un tablero principal junto con un registro (Log) que te permite seguir todas las acciones ocurridas durante la partida.
+* Reglas del Juego: Reglas básicas del juego en una página dedicada, lo que te permite aprender o repasar las reglas antes de jugar.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
+* [ReactJS](https://es.react.dev/)
+* [Vite](https://vitejs.dev/)
+* [TailwindCSS](https://tailwindcss.com/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Assets
+* [Kenney Boardgame Pack](https://kenney.nl/assets/boardgame-pack)
+
+## Demo
+* [Play Demo!](https://stunning-beijinho-0b19f2.netlify.app/)
